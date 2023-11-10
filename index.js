@@ -1,11 +1,12 @@
 import "dotenv/config";
 import express from "express";
 import mysql from "mysql2";
+import { learnerRouter, instructorRouter } from "./routes/index.js";
 
 const app = express();
 
-const db = mysql.createConnection({
-  host: process.env.DB_HOSTNAME,
+export const db = mysql.createConnection({
+  host: process.env.DB_HOST,
   user: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
 });
@@ -40,6 +41,10 @@ db.connect((err) => {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Routes
+app.use("/api/learner", learnerRouter);
+app.use("/api/instructor", instructorRouter);
 
 app.get("/", (_, res) => {
   res.json({ success: true, message: "Welcome to Airtribe", data: {} });
