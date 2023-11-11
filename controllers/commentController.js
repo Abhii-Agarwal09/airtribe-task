@@ -1,5 +1,15 @@
 import { db } from "../index.js";
 
+/**
+ * Add a new comment by an instructor for a specific learner.
+ *
+ * @param {number} learnerId - The ID of the learner for whom the comment is added.
+ * @param {number} instructorId - The ID of the instructor adding the comment.
+ * @param {string} comment - The text of the comment.
+ * @returns {Object} - An object representing the result of the operation.
+ *
+ * @throws {Error} - Throws an error if there is an issue with the database query.
+ */
 const newComment = async (req, res) => {
   try {
     const { learnerId, instructorId, comment } = req.body;
