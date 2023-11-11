@@ -3,8 +3,6 @@ import mysql from "mysql2";
 
 dotenv.config({ path: "../.env" });
 
-console.log(process.env.DB_HOST, process.env.DB_USERNAME, process.env.DB_PASSWORD, process.env.DB_NAME);
-
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USERNAME,
@@ -15,6 +13,18 @@ const db = mysql.createConnection({
 db.connect((err) => {
   if (err) throw err;
   console.log("Connected to MySQL database");
+
+  // Create database
+  const createDatabase = "CREATE DATABASE IF NOT EXISTS Airtribe";
+  db.query(createDatabase, (err) => {
+    if (err) throw err;
+    console.log("Created database Airtribe");
+  });
+  // Use database
+  db.query("USE Airtribe", (err) => {
+    if (err) throw err;
+    console.log("Using database Airtribe");
+  });
 
   // Create Instructors table
   const createInstructorsTable = `
@@ -29,15 +39,15 @@ db.connect((err) => {
     console.log("Instructors table created");
 
     // Insert dummy instructors
-    // const insertInstructors = `
-    //   INSERT INTO Instructors (name, email) VALUES
-    //     ('John Doe', 'john.doe@example.com'),
-    //     ('Jane Smith', 'jane.smith@example.com')
-    // `;
-    // db.query(insertInstructors, (err) => {
-    //   if (err) throw err;
-    //   console.log("Dummy instructors inserted");
-    // });
+    const insertInstructors = `
+      INSERT INTO Instructors (name, email) VALUES
+        ('Abhishek', 'abhishek@gmail.com'),
+        ('Pratham', 'pratham@gmail.com');
+    `;
+    db.query(insertInstructors, (err) => {
+      if (err) throw err;
+      console.log("Dummy instructors inserted");
+    });
   });
 
   // Create Learners table
@@ -55,15 +65,16 @@ db.connect((err) => {
     console.log("Learners table created");
 
     // Insert dummy learners
-    // const insertLearners = `
-    //   INSERT INTO Learners (name, email, linkedin_profile, phone_number) VALUES
-    //     ('Alice Johnson', 'alice.j@example.com', 'linkedin.com/alice', '123-456-7890'),
-    //     ('Bob Smith', 'bob.smith@example.com', 'linkedin.com/bob', '987-654-3210')
-    // `;
-    // db.query(insertLearners, (err) => {
-    //   if (err) throw err;
-    //   console.log("Dummy learners inserted");
-    // });
+    const insertLearners = `
+      INSERT INTO Learners (name, email, linkedin_profile, phone_number) VALUES
+        ('Rahul', 'rahul@gmail.com', 'linkedin.com/rahul', '9634717667'),
+        ('Jeet', 'jeet@gmail.com', 'linkedin.com/jeet', '9634717667'),
+        ('Harsh', 'harsh@gmail.com', 'linkedin.com/harsh', '9634717667');
+    `;
+    db.query(insertLearners, (err) => {
+      if (err) throw err;
+      console.log("Dummy learners inserted");
+    });
   });
 
   // Create Courses table
@@ -84,15 +95,16 @@ db.connect((err) => {
     console.log("Courses table created");
 
     // Insert dummy courses
-    // const insertCourses = `
-    //   INSERT INTO Courses (course_name, start_date, max_seats, instructor_id, is_open, description) VALUES
-    //     ('Web Development', '2023-01-01', 20, 1, true, 'Learn web development'),
-    //     ('Data Science', '2023-02-01', 15, 2, false, 'Explore data science concepts')
-    // `;
-    // db.query(insertCourses, (err) => {
-    //   if (err) throw err;
-    //   console.log("Dummy courses inserted");
-    // });
+    const insertCourses = `
+      INSERT INTO Courses (course_name, start_date, max_seats, instructor_id, is_open, description) VALUES
+        ('Web Development', '2023-01-01', 20, 1, true, 'Learn web development'),
+        ('Data Science', '2023-02-01', 15, 2, true, 'Explore data science concepts'),
+        ('DSA', '2023-02-01', 15, 2, true, 'Explore DSA concepts');
+    `;
+    db.query(insertCourses, (err) => {
+      if (err) throw err;
+      console.log("Dummy courses inserted");
+    });
   });
   // Create Registrations table
   const createRegistrationsTable = `
@@ -110,17 +122,17 @@ db.connect((err) => {
     console.log("Registrations table created");
 
     // Insert dummy registrations
-    // const insertRegistrations = `
-    //   INSERT INTO Registrations (course_id, learner_id, status) VALUES
-    //     (1, 1, 'Accepted'),
-    //     (1, 2, 'Pending'),
-    //     (2, 1, 'Rejected'),
-    //     (2, 2, 'Waitlisted')
-    // `;
-    // db.query(insertRegistrations, (err) => {
-    //   if (err) throw err;
-    //   console.log("Dummy registrations inserted");
-    // });
+    const insertRegistrations = `
+      INSERT INTO Registrations (course_id, learner_id, status) VALUES
+        (1, 1, 'Accepted'),
+        (1, 2, 'Pending'),
+        (2, 1, 'Rejected'),
+        (2, 2, 'Waitlisted')
+    `;
+    db.query(insertRegistrations, (err) => {
+      if (err) throw err;
+      console.log("Dummy registrations inserted");
+    });
   });
 
   // Create Comments table
@@ -139,26 +151,22 @@ db.connect((err) => {
     console.log("Comments table created");
 
     // Insert dummy comments
-    // const insertComments = `
-    //   INSERT INTO Comments (learner_id, instructor_id, comment_text) VALUES
-    //     (1, 1, 'Great progress in the course!'),
-    //     (1, 2, 'Keep up the good work!'),
-    //     (2, 1, 'Excellent participation'),
-    //     (2, 2, 'Needs improvement in some areas')
-    // `;
-    // db.query(insertComments, (err) => {
-    //   if (err) throw err;
-    //   console.log("Dummy comments inserted");
-
-    //   // Close the connection
-    //   db.end((err) => {
-    //     if (err) throw err;
-    //     console.log("Connection closed");
-    //   });
-    // });
-    db.end((err) => {
+    const insertComments = `
+      INSERT INTO Comments (learner_id, instructor_id, comment_text) VALUES
+        (1, 1, 'Great progress in the course!'),
+        (1, 2, 'Keep up the good work!'),
+        (2, 1, 'Excellent participation'),
+        (2, 2, 'Needs improvement in some areas')
+    `;
+    db.query(insertComments, (err) => {
       if (err) throw err;
-      console.log("Connection closed");
+      console.log("Dummy comments inserted");
+
+      // Close the connection
+      db.end((err) => {
+        if (err) throw err;
+        console.log("Connection closed");
+      });
     });
   });
 });
