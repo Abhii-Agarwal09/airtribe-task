@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import mysql from "mysql2/promise";
-import { learnerRouter, instructorRouter, courseRouter } from "./routes/index.js";
+import { learnerRouter, instructorRouter, courseRouter, commentRouter, registerationRouter } from "./routes/index.js";
 
 const app = express();
 
@@ -50,6 +50,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/learner", learnerRouter);
 app.use("/api/instructor", instructorRouter);
 app.use("/api/course", courseRouter);
+app.use("/api/comment", commentRouter);
+app.use("/api/registeration", registerationRouter);
 
 app.get("/", (_, res) => {
   res.json({ success: true, message: "Welcome to Airtribe", data: {} });
