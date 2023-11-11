@@ -20,8 +20,8 @@ Design database and APIs for application based courses on Airtribe.
 
 5. Open the folder in VS Code or any code editor of your choice
 6. Make a `.env` file in the root of your project using the `.env.sample` file, and enter your mysql credentials
-7. Go to seed directory and run the following command to setup the database
+7. Go to seed directory `cd seed` and run the following command to setup the database
 `node index.js`
 
 8. Now your database is setup, and you can start the project.
-9. Go back to your root folder and run `npm run dev` to start the server in development mode.
+9. Go back to your root folder `cd ..` and run `npm run dev` to start the server in development mode.
