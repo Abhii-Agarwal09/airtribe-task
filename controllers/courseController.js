@@ -49,4 +49,28 @@ const newCourse = async (req, res) => {
   }
 };
 
-export { getCourse, newCourse };
+const editCourse = async (req, res) => {
+  try {
+    const { courseName, instructorEmail, startDate, maxSeats, description, isOpen } = req.body;
+    let sql = "SELECT id FROM instructors WHERE email = ?";
+    const [instructorIdResult] = await db.query(sql, [instructorEmail]);
+    if (instructorIdResult.length === 0) {
+      return res.json({
+        success: false,
+        message: "Instructor not found, cannot edit course",
+        data: instructorIdResult,
+      });
+    }
+    let instructorId = instructorIdResult[0].id;
+    sql =
+      "UPDATE courses set course_name = ?, start_date = ?, max_seats = ?, description = ?, is_open = ? WHERE instructor_id = ?";
+    let values = [courseName, startDate, maxSeats, description, isOpen, instructorId];
+    const [updateCourseResult] = await db.query(sql, values);
+    res.json({ success: true, message: "Course updated successfully", data: updateCourseResult });
+  } catch (err) {
+    console.error(err);
+    return res.json({ success: false, message: "There was an error", data: err.message });
+  }
+};
+
+export { getCourse, newCourse, editCourse };

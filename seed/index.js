@@ -74,7 +74,7 @@ db.connect((err) => {
       start_date DATE NOT NULL,
       max_seats INT NOT NULL,
       instructor_id INT,
-      is_open BOOLEAN DEFAULT false,
+      is_open BOOLEAN DEFAULT true,
       description TEXT,
       FOREIGN KEY (instructor_id) REFERENCES Instructors(id) ON DELETE CASCADE
     )
