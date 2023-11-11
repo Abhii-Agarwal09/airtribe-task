@@ -1,33 +1,37 @@
 import "dotenv/config";
 import express from "express";
-import mysql from "mysql2";
-import { learnerRouter, instructorRouter } from "./routes/index.js";
+import mysql from "mysql2/promise";
+import { learnerRouter, instructorRouter, courseRouter } from "./routes/index.js";
 
 const app = express();
 
-export const db = mysql.createConnection({
+export const db = await mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
 });
 
-(() => {
+(async () => {
   const sql = "CREATE DATABASE IF NOT EXISTS airtribe";
-  db.query(sql, (err, _) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    console.log("Database created successfully");
-  });
+  const [res] = await db.query(sql);
+  if (res) console.log("Database created successfully");
+  // db.query(sql, (err, _) => {
+  //   if (err) {
+  //     console.log(err);
+  //     return;
+  //   }
+  //   console.log("Database created successfully");
+  // });
   const usesql = "USE airtribe";
-  db.query(usesql, (err, _) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    console.log("Using airtribe database");
-  });
+  const [useRes] = await db.query(usesql);
+  if (useRes) console.log("Using airtribe database");
+  // db.query(usesql, (err, _) => {
+  //   if (err) {
+  //     console.log(err);
+  //     return;
+  //   }
+  //   console.log("Using airtribe database");
+  // });
 })();
 
 // connect
@@ -45,6 +49,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use("/api/learner", learnerRouter);
 app.use("/api/instructor", instructorRouter);
+app.use("/api/course", courseRouter);
 
 app.get("/", (_, res) => {
   res.json({ success: true, message: "Welcome to Airtribe", data: {} });

@@ -1,44 +1,32 @@
 import { db } from "../index.js";
 
-const getInstructor = (req, res) => {
+const getInstructor = async (req, res) => {
   try {
     const { name, email } = req.body;
     let sql = "SELECT * FROM instructors WHERE name = ? and email = ?";
     let values = [name, email];
-    db.query(sql, values, (err, result) => {
-      if (err) {
-        console.log(err);
-        return res.json({ success: false, message: "There was an error", data: err.message });
-      }
-      res.json({ success: true, message: "Instructor found", data: result });
-    });
+    const [result] = await db.query(sql, values);
+    if (result.length === 0) {
+      return res.json({ success: false, message: "Couldn't find instructor'", data: result });
+    }
+    res.json({ success: true, message: "Instructor found", data: result });
   } catch (err) {
     console.error(err);
   }
 };
 
-const newInstructor = (req, res) => {
+const newInstructor = async (req, res) => {
   try {
     let { name, email } = req.body;
     let sql = "SELECT * FROM instructors WHERE name = ? and email = ?";
     let values = [name, email];
-    db.query(sql, values, (err, result) => {
-      if (err) {
-        console.log(err);
-        return res.json({ success: false, message: "There was an error", data: err.message });
-      }
-      if (result.length && result.length > 0) {
-        return res.json({ success: true, message: "Instructor already exists", data: result });
-      }
-      sql = "INSERT INTO instructors(name, email) VALUES (?, ?)";
-      db.query(sql, values, (err, result) => {
-        if (err) {
-          console.log(err);
-          return res.json({ success: false, message: "There was an error", data: err.message });
-        }
-        return res.json({ success: true, message: "Instructor created", data: result });
-      });
-    });
+    const [result] = await db.query(sql, values);
+    if (result.length && result.length > 0) {
+      return res.json({ success: true, message: "Instructor already exists", data: result });
+    }
+    sql = "INSERT INTO instructors(name, email) VALUES (?, ?)";
+    const [createInstructorResult] = await db.query(sql, values);
+    return res.json({ success: true, message: "Instructor created", data: createInstructorResult });
   } catch (err) {
     console.error(err);
   }
