@@ -9,25 +9,16 @@ export const db = await mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 });
-
-(async () => {
-  const sql = "CREATE DATABASE IF NOT EXISTS airtribe";
-  const [res] = await db.query(sql);
-  if (res) console.log("Database created successfully");
-  const usesql = "USE airtribe";
-  const [useRes] = await db.query(usesql);
-  if (useRes) console.log("Using airtribe database");
-})();
 
 // connect
-db.connect((err) => {
-  if (err) {
-    console.log("Error connecting to database: ", err);
-    return;
-  }
-  console.log("Database connected");
-});
+const connection = await db.connect();
+if (connection) {
+  console.log("Connected to database");
+} else {
+  console.log("Error connecting to database");
+}
 
 // Middlewares
 app.use(express.json());
